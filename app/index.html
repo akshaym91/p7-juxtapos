@@ -1,0 +1,66 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Juxtapos</title>
+    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
+    <!-- build:css styles/vendor.css -->
+    <!-- bower:css -->
+    <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,500' rel='stylesheet'>
+    <link href='../bower_components/normalize.css/normalize.css' rel='stylesheet'>
+    <link rel="stylesheet" href="../bower_components/fontawesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../bower_components/vertical-responsive-menu/dist/vertical-responsive-menu.min.css">
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:css styles/main.css -->
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- endbuild -->
+</head>
+
+<body>
+    <!--[if lt IE 10]>
+      <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
+    <div class="container">
+        <header class="navbar header clearfix">
+            <button type="button" id="toggleMenu" class="toggle_menu">
+                <i class="fa fa-bars"></i>
+            </button>
+            <h1>Juxtap<i class="fa fa-globe fa-sm"></i>s</h1>
+        </header>
+        <nav class="vertical_nav">
+            <div class="search-wrapper">
+                <input class="form-input" id="zoom-to-area-text" type="text" placeholder="Place" data-bind="value: query, valueUpdate: 'keyup'" autocomplete="off" />
+            </div>
+            <ul id="js-menu" class="menu" data-bind="template: {name:'place', foreach:placesToShow}"></ul>
+            <script type="text/html" id="place">
+                <li class="menu--item">
+                  <a href="#" class="menu--link" title="Item 2" data-bind="click: indicate">
+                    <i class="menu--icon fa fa-fw fa-circle"></i>
+                    <span  data-bind="text: title" menu--label"></span>
+                  </a>
+                </li>
+            </script>
+        </nav>
+         <div class="wrapper">
+            <div id="map"></div>
+        </div>
+    </div>
+    <!-- build:js scripts/vendor.js -->
+    <!-- bower:js -->
+    <script src="../bower_components/jquery/dist/jquery.js"></script>
+    <script src="../bower_components/knockout/dist/knockout.js"></script>
+    <script src="../bower_components/vertical-responsive-menu/dist/vertical-responsive-menu.min.js"></script>
+    <!-- endbower -->
+    <!-- endbuild -->
+    <!-- build:js scripts/main.js -->
+    <script src="scripts/main.js"></script>
+    <!-- endbuild -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDfy3T8UQzGJI0Eb5S6NsQsz-fE_rDNP9Q&v=3&callback=init">
+    </script>
+</body>
+
+</html>

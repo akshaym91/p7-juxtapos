@@ -1,0 +1,9 @@
+{
+  "name": "juxtapos",
+  "private": true,
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "knockout": "~3.2.0",
+    "vertical-responsive-menu": "^1.0.2"
+  }
+}
