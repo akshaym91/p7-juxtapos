@@ -58,47 +58,43 @@ var Place = function(place, map, id) {
 
     // Listener for the click on marker
     this.marker.addListener('click', function() {
-        self.info = '<div class="info-window-content"><div class="title"><b>' + place.title + "</b></div>" +
-            '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
-            '<div class="content">' + self.street + "</div>" +
-            '<div class="content">' + self.city + "</div>" +
-            '<div class="content"><a href="tel:' + self.phone + '">' + self.phone + "</a></div></div>";
-        self.infoWindow.setContent(self.info);
+        var FOURSQUARE_URL = 'https://api.foursquare.com/v2/venues/search?ll=' +
+            self.location.lat + ',' + self.location.lng +
+            '&client_id=' + CLIENT_ID + '&client_secret=' +
+            CLIENT_SECRET + '&v=20170101' + '&query=' + self.title;
+        var loadingInfo = '<div class="info-window-content"><div class="content">Fetching data from Foursquare API ...</div>'+
+        '<div class="content"><i class="fa fa-spinner fa-spin"></i></div></div>';
+        self.infoWindow.setContent(loadingInfo);
+        // Fetches data from the foursquare API
+        $.getJSON(FOURSQUARE_URL).done(function(data) {
+            var results = data.response.venues[0];
+            self.URL = results.url || 'URL not available';
+            self.street = results.location.formattedAddress[0] || 'Street not available';
+            self.city = results.location.formattedAddress[1] || 'City not available';
+            self.phone = results.contact.phone || 'Phone not available';
+            self.info = '<div class="info-window-content"><div class="title"><b>' + place.title + "</b></div>" +
+                '<div class="content"><a href="' + self.URL + '">' + self.URL + "</a></div>" +
+                '<div class="content">' + self.street + "</div>" +
+                '<div class="content">' + self.city + "</div>" +
+                '<div class="content"><a href="tel:' + self.phone + '">' + self.phone + "</a></div></div>";
+            self.infoWindow.setContent(self.info);
+        }).fail(function() {
+            var failMessage = '<div class="info-window-content"><div class="title"><b>' + self.title + "</b></div>" +
+                '<div class="content">Failed to fetch Details from foursquare</div>';
+            self.infoWindow.setContent(failMessage);
+            showMessage('Unable to get foursquare data for '+ self.title);
+        });
         self.marker.setAnimation(google.maps.Animation.BOUNCE);
         self.infoWindow.open(map, this);
         setTimeout(function() {
             self.marker.setAnimation(null);
-        }, 2000);
+        }, 1400);
     });
 
     //Mocks a click event
     this.indicate = function(place) {
         google.maps.event.trigger(self.marker, 'click');
     };
-
-    var FOURSQUARE_URL = 'https://api.foursquare.com/v2/venues/search?ll=' +
-        this.location.lat + ',' + this.location.lng +
-        '&client_id=' + CLIENT_ID + '&client_secret=' +
-        CLIENT_SECRET + '&v=20170101' + '&query=' + this.title;
-
-    // Fetches data from the foursquare API
-    $.getJSON(FOURSQUARE_URL).done(function(data) {
-        var results = data.response.venues[0];
-        self.URL = results.url;
-        if (typeof self.URL === 'undefined') {
-            self.URL = '';
-        }
-        self.street = results.location.formattedAddress[0];
-        self.city = results.location.formattedAddress[1];
-        self.phone = results.contact.phone;
-        if (typeof self.phone === 'undefined') {
-            self.phone = '';
-        } else {
-            self.phone = formatPhone(self.phone);
-        }
-    }).fail(function() {
-        alert('Unable to get foursquare data');
-    });
 
     /**
      * To be implement in the future. Yelp API.
@@ -204,6 +200,9 @@ function ViewModel() {
         }
         map.fitBounds(bounds);
     };
+    // google.maps.event.addDomListener(window, 'resize', function() {
+    //     map.fitBounds(bounds); // `bounds` is a `LatLngBounds` object
+    // });
 }
 
 /**
@@ -213,4 +212,14 @@ function ViewModel() {
 function init() {
     var myViewModel = new ViewModel();
     ko.applyBindings(myViewModel, $('html')[0]);
+}
+
+function onMapLoadError() {
+    showMessage('Failed to load Google Maps API.');
+}
+
+function showMessage(message) {
+    $('#snackbar').addClass('show').slideDown();
+    $('#snackbar').text(message);
+    $('#snackbar').delay(2000).fadeOut('slow');
 }

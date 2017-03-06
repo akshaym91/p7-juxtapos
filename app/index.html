@@ -45,9 +45,10 @@
                 </li>
             </script>
         </nav>
-         <div class="wrapper">
+         <main class="wrapper">
+            <div id="snackbar"></div>
             <div id="map"></div>
-        </div>
+        </main>
     </div>
     <!-- build:js scripts/vendor.js -->
     <!-- bower:js -->
@@ -59,7 +60,7 @@
     <!-- build:js scripts/main.js -->
     <script src="scripts/main.js"></script>
     <!-- endbuild -->
-    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDfy3T8UQzGJI0Eb5S6NsQsz-fE_rDNP9Q&v=3&callback=init">
+    <script async defer src="https://maps.googleapis.com/maps/api/js?libraries=places,geometry,drawing&key=AIzaSyDfy3T8UQzGJI0Eb5S6NsQsz-fE_rDNP9Q&v=3&callback=init" onerror="onMapLoadError()">
     </script>
 </body>
 
